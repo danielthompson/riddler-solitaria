@@ -10,39 +10,43 @@ int main() {
    std::ofstream logfile;
    logfile.open(filePath, std::ios::trunc);
 
-   int winners = 0;
-   int losers = 0;
-
-   const int min = 0;
+   // minimum size of population
+   const int minpopulation = 1000;
    const int maxpopulation = 1000000;
-   const int step = 1000;
-
-   const int overallIterations = 1000;
+   const int stepsize = 1000;
+   const int iterationsperstep = 1000;
 
    std::cout << "Population\tWinners\tPercentage" << std::endl;
    logfile << "Population\tWinners\tPercentage" << std::endl;
 
-   for (int k = step; k <= maxpopulation; k += step) {
+   // placeholder - number of winners per iteration
+   int winners = 0;
+   // placeholder - number of losers per iteration
+   int losers = 0;
 
-      for (int j = 0; j < overallIterations; j++) {
-         std::vector<bool> myset(k, 1);
+   for (int k = minpopulation; k <= maxpopulation; k += stepsize) {
+
+      for (int j = 0; j < iterationsperstep; j++) {
+         std::vector<bool> people(k, 1);
          int max = k;
 
          do {
-            for (int i = min; i < max; i++) {
-               myset[rand() % max] = 0;
+            for (int i = 0; i < max; i++) {
+               people[rand() % max] = 0;
             }
 
             int newMax = 0;
 
-            for (int i = min; i < max; i++) {
-               newMax = myset[i] ? newMax + 1 : newMax;
+            for (int i = 0; i < max; i++) {
+               newMax = people[i] ? newMax + 1 : newMax;
             }
-            for (int i = min; i < newMax; i++) {
-               myset[i] = 1;
+
+            for (int i = 0; i < newMax; i++) {
+               people[i] = 1;
             }
+
             for (int i = newMax; i < max; i++) {
-               myset[i] = 0;
+               people[i] = 0;
             }
 
             max = newMax;
@@ -52,7 +56,7 @@ int main() {
          winners = (max == 1) ? winners + 1 : winners;
          losers = (max == 0) ? losers + 1 : losers;
       }
-      float percentage = winners * step / (float)(k * overallIterations);
+      float percentage = winners * stepsize / (float)(k * iterationsperstep);
 
       std::cout << std::fixed;
       logfile << std::fixed;
