@@ -10,18 +10,17 @@ int main() {
    std::ofstream logfile;
    logfile.open(filePath, std::ios::trunc);
 
+   std::cout << "Population\tWinners\tPercentage" << std::endl;
+   logfile << "Population\tWinners\tPercentage" << std::endl;
+
    // minimum size of population
    const int minpopulation = 1000;
    const int maxpopulation = 1000000;
    const int stepsize = 1000;
    const int iterationsperstep = 1000;
 
-   std::cout << "Population\tWinners\tPercentage" << std::endl;
-   logfile << "Population\tWinners\tPercentage" << std::endl;
-
-   // placeholder - number of winners per iteration
+   // placeholders per iteration
    int winners = 0;
-   // placeholder - number of losers per iteration
    int losers = 0;
 
    for (int k = minpopulation; k <= maxpopulation; k += stepsize) {
