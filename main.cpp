@@ -3,6 +3,7 @@
 #include <iomanip>
 #include <fstream>
 #include <vector>
+#include <random>
 
 int main() {
 
@@ -14,54 +15,58 @@ int main() {
    logfile << "Population\tWinners\tPercentage" << std::endl;
 
    // minimum size of population
-   const int minpopulation = 1000;
-   const int maxpopulation = 1000000;
-   const int stepsize = 1000;
-   const int iterationsperstep = 1000;
+   constexpr unsigned int minPopulation = 1000;
+   constexpr unsigned int maxPopulation = 100000;
+   constexpr unsigned int populationStepSize = 1000;
+   constexpr unsigned int iterationsPerStep = 100;
+
+   std::random_device randomDevice;
+   std::mt19937 generator(randomDevice());
+   std::uniform_int_distribution<> distribution(0);
 
    // placeholders per iteration
    int winners = 0;
    int losers = 0;
 
-   for (int k = minpopulation; k <= maxpopulation; k += stepsize) {
+   for (int populationSize = minPopulation; populationSize <= maxPopulation; populationSize += populationStepSize) {
 
-      for (int j = 0; j < iterationsperstep; j++) {
-         std::vector<bool> people(k, 1);
-         int max = k;
+      for (int j = 0; j < iterationsPerStep; j++) {
+         std::vector<bool> people(populationSize, true);
+         int peopleRemaining = populationSize;
 
          do {
-            for (int i = 0; i < max; i++) {
-               people[rand() % max] = 0;
+            for (int i = 0; i < peopleRemaining; i++) {
+               people[distribution(generator) % peopleRemaining] = false;
             }
 
-            int newMax = 0;
+            int newPeopleRemaining = 0;
 
-            for (int i = 0; i < max; i++) {
-               newMax = people[i] ? newMax + 1 : newMax;
+            for (int i = 0; i < peopleRemaining; i++) {
+               newPeopleRemaining = people[i] ? newPeopleRemaining + 1 : newPeopleRemaining;
             }
 
-            for (int i = 0; i < newMax; i++) {
-               people[i] = 1;
+            for (int i = 0; i < newPeopleRemaining; i++) {
+               people[i] = true;
             }
 
-            for (int i = newMax; i < max; i++) {
-               people[i] = 0;
+            for (int i = newPeopleRemaining; i < peopleRemaining; i++) {
+               people[i] = false;
             }
 
-            max = newMax;
+            peopleRemaining = newPeopleRemaining;
 
-         } while (max > 1);
+         } while (peopleRemaining > 1);
 
-         winners = (max == 1) ? winners + 1 : winners;
-         losers = (max == 0) ? losers + 1 : losers;
+         winners = (peopleRemaining == 1) ? winners + 1 : winners;
+         losers = (peopleRemaining == 0) ? losers + 1 : losers;
       }
-      float percentage = winners * stepsize / (float)(k * iterationsperstep);
+      float percentage = winners * populationStepSize / (float)(populationSize * iterationsPerStep);
 
       std::cout << std::fixed;
       logfile << std::fixed;
 
-      std::cout << k << "\t" << winners << "\t";
-      logfile << k << "\t" << winners << "\t";
+      std::cout << populationSize << "\t" << winners << "\t";
+      logfile << populationSize << "\t" << winners << "\t";
 
       std::cout << std::fixed;
       logfile << std::fixed;
