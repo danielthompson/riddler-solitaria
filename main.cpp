@@ -30,8 +30,9 @@ int main() {
 
    for (int populationSize = minPopulation; populationSize <= maxPopulation; populationSize += populationStepSize) {
 
+      std::vector<bool> people(populationSize, true);
       for (int j = 0; j < iterationsPerStep; j++) {
-         std::vector<bool> people(populationSize, true);
+
          int peopleRemaining = populationSize;
 
          do {
@@ -43,14 +44,7 @@ int main() {
 
             for (int i = 0; i < peopleRemaining; i++) {
                newPeopleRemaining = people[i] ? newPeopleRemaining + 1 : newPeopleRemaining;
-            }
-
-            for (int i = 0; i < newPeopleRemaining; i++) {
                people[i] = true;
-            }
-
-            for (int i = newPeopleRemaining; i < peopleRemaining; i++) {
-               people[i] = false;
             }
 
             peopleRemaining = newPeopleRemaining;
