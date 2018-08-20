@@ -15,7 +15,7 @@ int main() {
    constexpr unsigned int minPopulation = 1000;
    constexpr unsigned int maxPopulation = 100000;
    constexpr unsigned int populationStepSize = 1000;
-   constexpr unsigned int iterationsPerStep = 1000;
+   constexpr unsigned int iterationsPerStep = 10000;
 
    std::random_device randomDevice;
    std::mt19937 generator(randomDevice());
